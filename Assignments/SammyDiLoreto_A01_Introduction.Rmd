@@ -1,6 +1,6 @@
 ---
 title: "Assignment 1: Introduction"
-author: "Student Name"
+author: "Sammy DiLoreto"
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -39,20 +39,20 @@ Enter answers to the questions just below the >Answer: prompt.
 
 1. What are your previous experiences with data analytics, R, and Git? Include both formal and informal training.
 
-> Answer: 
+> Answer: I've taken Geospatial Data Analytics (ENV 859) where we used Python and Git for preparing and running geospatial analyses. I used in R for statistical analyses in ENV 710, ENV 537, and for a summer research project. 
 
 2. Are there any components of the course about which you feel confident?
 
-> Answer: 
+> Answer: I feel confident navigating R studio and git and coding in general because of my experience in ENV 859 with python.
 
 3. Are there any components of the course about which you feel apprehensive?
 
-> Answer: 
+> Answer: The terminology will be something to get used to. I'm a little worried about using my own computer because if I do run into any issues, it may be difficult for the the instructors to fix. 
 
 
 ## 3) GitHub
 
-Provide a link below to your forked course repository in GitHub. Make sure you have pulled all recent changes from the course repository and that you have updated your course README file, committed those changes, and pushed them to your GitHub account. 
+Provide a link below to your forked course repository in GitHub. Make sure you have pulled all recent changes from the course repository and that you have updated your course Rmd file, committed those changes, and pushed them to your GitHub account. 
 
 > Answer: 
 
