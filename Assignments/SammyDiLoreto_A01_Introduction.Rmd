@@ -33,7 +33,6 @@ This setting will help deal with relative paths later on...
  - Select the RMarkdown section
  - In the "Evaluate chunks in directory", set the option to "Project"
 
-
 ## 2) Discussion Questions
 Enter answers to the questions just below the >Answer: prompt.
 
