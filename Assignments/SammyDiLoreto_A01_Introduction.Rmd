@@ -31,22 +31,23 @@ tinytex::install_tinytex()
 This setting will help deal with relative paths later on...
  - From the Tool menu, select `Global Options`
  - Select the RMarkdown section
- - In the "Evaluate chunks in directory", set the option to "Project"
+ - In the "Evaluate chunks in directory", set the option to "Project" --> I did not have this option 
+
 
 ## 2) Discussion Questions
 Enter answers to the questions just below the >Answer: prompt.
 
 1. What are your previous experiences with data analytics, R, and Git? Include both formal and informal training.
 
-> Answer: I've taken Geospatial Data Analytics (ENV 859) where we used Python and Git for preparing and running geospatial analyses. I used in R for statistical analyses in ENV 710, ENV 537, and for a summer research project. 
+> Answer: I've taken Geospatial Data Analytics (ENV 859) where we used Python and Git for preparing and running geospatial analyses. I used R for statistical analyses in ENV 710, ENV 537 (Environmental Health and Epidemiology), and for a summer research project with Duke's Superfund Research Center. 
 
 2. Are there any components of the course about which you feel confident?
 
-> Answer: I feel confident navigating R studio and git and coding in general because of my experience in ENV 859 with python.
+> Answer: I feel confident navigating R studio and Git because of my previous experience in classes. I'm pretty comfortable with general coding because of my experience with python in ENV 859.
 
 3. Are there any components of the course about which you feel apprehensive?
 
-> Answer: The terminology will be something to get used to. I'm a little worried about using my own computer because if I do run into any issues, it may be difficult for the the instructors to fix. 
+> Answer: I'm apprehensive about learning all the terminology, but I think it will come with time. I'm also a little worried about using my own computer because if I do run into any issues, it may be difficult for the instructors to fix. 
 
 
 ## 3) GitHub
@@ -56,4 +57,4 @@ Provide a link below to your forked course repository in GitHub. Make sure you h
 > Answer: https://github.com/sammydiloreto/EDA-Spring2023.git 
 
 ## 4) Knitting
-When you have completed this document, click the `knit` button.This should produce a PDF copy of your markdown document. Submit this PDF to Sakai. 
+When you have completed this document, click the `knit` button. This should produce a PDF copy of your markdown document. Submit this PDF to Sakai. 
