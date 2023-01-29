@@ -236,7 +236,7 @@ meal2 <- recipe4(2); meal2
 meal3 <- recipe5(3); meal3
 
 recipe6 <- function(x){
-  ifelse(x<3, x*2, x/2) #log_exp, if TRUE, if FALSE
+  ifelse(x<3, x*2, x/2) # logical expression, if TRUE, if FALSE
   
 }
 
