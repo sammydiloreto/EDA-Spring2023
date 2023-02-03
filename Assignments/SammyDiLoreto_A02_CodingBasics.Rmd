@@ -38,8 +38,8 @@ sequence.q1 #returning sequence as output
 
 #2. 
 mean.q1 <- mean(sequence.q1) #computing the mean of sequence.q1
-median.q1 <- median(sequence.q1) #computing the median of sequence.q1
 mean.q1 #returning mean as output
+median.q1 <- median(sequence.q1) #computing the median of sequence.q1
 median.q1 #returning median as output
 
 #3. 
