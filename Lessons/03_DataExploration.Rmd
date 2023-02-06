@@ -224,7 +224,7 @@ USGS.flow.data$datetime <- create.early.dates(USGS.flow.data$datetime)
 
 #
 USGS.flow.data$datetime <- as.Date(USGS.flow.data$datetime, format = "%Y%m%d") 
-#not as date???
+#not as date??? but a factor
 ```
 
 ## Saving datasets
@@ -234,7 +234,7 @@ We just edited our raw dataset into a processed form. We may want to return to t
 
 ```{r Saving data}
 write.csv(USGS.flow.data, file = "./Data/Processed/USGS_Site02085000_Flow_Processed.csv", row.names=FALSE)
-
+#NO PROCESSED FOLDER
 ```
 
 
