@@ -75,7 +75,7 @@ library(tidyverse)
 
 Question: What happens in the console when you load a package?
 
-> Answer: 
+> Answer: Shows the packages that are loading in and the conflicts.
 
 ### Import your datasets
 
@@ -96,7 +96,7 @@ Commons functions to import datasets and store as data frames are *read.table()*
 # Absolute file path (not recommended)
 #read.csv("/home/guest/EDA-Fall2022/Data/Raw/USGS_Site02085000_Flow_Raw.csv",stringsAsFactors = TRUE)
 
-# Relative file path (friendly for users regardless of machine)
+# Relative file path (friendly for users regardless of machine) relative to working directory
 USGS.flow.data <- read.csv("./Data/Raw/USGS_Site02085000_Flow_Raw.csv",stringsAsFactors = TRUE)   
 
 # What happens if we don't assign a name to our imported dataset?
@@ -149,7 +149,7 @@ summary(USGS.flow.data)  #could point to column only with $
 ```
 
 What happened to blank cells in the spreadsheet when they were imported into R?
-> Answer: 
+> Answer: N/A values
 
 ## Adjusting Datasets
 
@@ -163,7 +163,7 @@ summary(USGS.flow.data$gage.height.mean)
 ```
 Question: What types of research questions might make it favorable to remove NAs from a dataset, and what types of research questions might make it favorable to retain NAs in the dataset?
 
-> Answer: 
+> Answer: for timeseries, never remove N/A
 
 ```{r Removing NAs}
 USGS.flow.data.complete <- na.omit(USGS.flow.data)
@@ -224,7 +224,7 @@ USGS.flow.data$datetime <- create.early.dates(USGS.flow.data$datetime)
 
 #
 USGS.flow.data$datetime <- as.Date(USGS.flow.data$datetime, format = "%Y%m%d") 
-
+#not as date???
 ```
 
 ## Saving datasets
