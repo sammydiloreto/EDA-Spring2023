@@ -144,15 +144,27 @@ write.csv(PM25.NC2019.processed, row.names = FALSE, file = "./Data/Processed/EPA
 11. Save your processed dataset with the following file name: "EPAair_O3_PM25_NC1819_Processed.csv"
 
 ```{r}
-#7 
+#7. Combine the four datasets with `rbind`.
+Ozone.PM25.NC1819 <- rbind(Ozone.NC2018.processed, Ozone.NC2019.processed, PM25.NC2018.processed, PM25.NC2019.processed)
 
-#8 
+#8. Wrangle your new dataset with a pipe function
+    #Include all sites that the four data frames have in common ?????????
+Ozone.PM25.NC1819.wrangle <- 
+  Ozone.PM25.NC1819 %>%
+  filter(Site.Name == Reduce(intersect,list(Ozone.NC2018.processed$Site.Name, Ozone.NC2019.processed$Site.Name, PM25.NC2018.processed$Site.Name, PM25.NC2019.processed$Site.Name)))
+    #Use the split-apply-combine strategy to generate daily means: group by date, site name, AQS parameter,      and county. Take the mean of the AQI value, latitude, and longitude.
 
-#9
+    #Add columns for "Month" and "Year" by parsing your "Date" column
 
-#10
 
-#11
+                              
+
+#9. Spread your datasets such that AQI values for ozone and PM2.5 are in separate columns
+Ozone.PM25.NC1819.processed
+
+#10. Call up the dimensions
+
+#11. Save your processed dataset 
 
 ```
 
