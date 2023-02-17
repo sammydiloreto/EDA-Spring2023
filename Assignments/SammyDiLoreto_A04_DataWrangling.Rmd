@@ -105,11 +105,11 @@ PM25.NC2019.select <-
 #5. For the PM2.5 datasets, fill all cells in AQS_PARAMETER_DESC with "PM2.5" (all cells in this column should be identical).
 PM25.NC2018.processed <- 
   PM25.NC2018.select %>%
-  mutate(AQS_PARAMETER_DESC = str_replace(AQS_PARAMETER_DESC, "Acceptable PM2.5 AQI & Speciation Mass", "PM2.5"))
+  mutate(AQS_PARAMETER_DESC = str_replace_all(AQS_PARAMETER_DESC, c("Acceptable PM2.5 AQI & Speciation Mass" = "PM2.5", "PM2.5 - Local Conditions" = "PM2.5")))
 
 PM25.NC2019.processed <- 
   PM25.NC2019.select %>%
-  mutate(AQS_PARAMETER_DESC = str_replace(AQS_PARAMETER_DESC, "Acceptable PM2.5 AQI & Speciation Mass", "PM2.5"))
+  mutate(AQS_PARAMETER_DESC = str_replace_all(AQS_PARAMETER_DESC, c("Acceptable PM2.5 AQI & Speciation Mass" = "PM2.5", "PM2.5 - Local Conditions" = "PM2.5")))
 
 
 #6. Save all four processed datasets in the Processed folder. Use the same file names as the raw files but replace "raw" with "processed".
@@ -148,23 +148,30 @@ write.csv(PM25.NC2019.processed, row.names = FALSE, file = "./Data/Processed/EPA
 Ozone.PM25.NC1819 <- rbind(Ozone.NC2018.processed, Ozone.NC2019.processed, PM25.NC2018.processed, PM25.NC2019.processed)
 
 #8. Wrangle your new dataset with a pipe function
-    #Include all sites that the four data frames have in common ?????????
+#Include all sites that the four data frames have in common 
 Ozone.PM25.NC1819.wrangle <- 
   Ozone.PM25.NC1819 %>%
-  filter(Site.Name == Reduce(intersect,list(Ozone.NC2018.processed$Site.Name, Ozone.NC2019.processed$Site.Name, PM25.NC2018.processed$Site.Name, PM25.NC2019.processed$Site.Name)))
-    #Use the split-apply-combine strategy to generate daily means: group by date, site name, AQS parameter,      and county. Take the mean of the AQI value, latitude, and longitude.
+  mutate_at(c('Site.Name'), ~na_if(., '')) %>%
+  drop_na(Site.Name) %>%
+  filter(Site.Name %in% Reduce(intersect, list(Ozone.NC2018.processed$Site.Name, Ozone.NC2019.processed$Site.Name,PM25.NC2018.processed$Site.Name, PM25.NC2019.processed$Site.Name))) %>%
+#Use the split-apply-combine strategy to generate daily means: group by date, site name, AQS parameter, and county. Take the mean of the AQI value, latitude, and longitude.
+  group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>%
+  summarise(meanAQI <- mean(DAILY_AQI_VALUE), meanLatitude <- mean(SITE_LATITUDE), meanLongitude <- mean(SITE_LONGITUDE)) %>%
+#Add columns for "Month" and "Year" by parsing your "Date" column
+  mutate(Month = month(Date),  Year = year(Date))
 
-    #Add columns for "Month" and "Year" by parsing your "Date" column
-
-
-                              
 
 #9. Spread your datasets such that AQI values for ozone and PM2.5 are in separate columns
-Ozone.PM25.NC1819.processed
+Ozone.PM25.NC1819.processed <-
+  Ozone.PM25.NC1819.wrangle  %>%
+  pivot_wider(names_from = "AQS_PARAMETER_DESC", 
+               values_from = "meanAQI <- mean(DAILY_AQI_VALUE)")
 
 #10. Call up the dimensions
+dim(Ozone.PM25.NC1819.processed)
 
 #11. Save your processed dataset 
+write.csv(Ozone.PM25.NC1819.processed, row.names = FALSE, file = "./Data/Processed/EPAair_O3_PM25_NC1819_Processed.csv")
 
 ```
 
@@ -177,11 +184,15 @@ Ozone.PM25.NC1819.processed
 
 ```{r}
 
-#12
+#12. Use the split-apply-combine strategy to generate a summary data frame.
+Ozone.PM25.NC1819.summary <- 
+  Ozone.PM25.NC1819.processed %>%
+  group_by(Site.Name, Month, Year) %>%
+  summarise(meanPM2.5 <- mean(PM2.5), meanOzone <- mean(Ozone)) %>%
+  drop_na("meanOzone <- mean(Ozone)")
 
-
-#13
-
+#13. Call up the dimensions of the summary dataset.
+dim(Ozone.PM25.NC1819.summary)
 
 ```
 
