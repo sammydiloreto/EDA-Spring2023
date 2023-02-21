@@ -46,7 +46,9 @@ ggplot(data=data.frame(x=0,y=0))+
   geom_text(
     x=0,
     y=0.025,
-    label=expression(paste("Mean is ", mu,",", R^{2},'=0.6'))
+    label=expression(paste("Mean is ", mu,", ", R^{2},'=0.6')) 
+    #paste brings together strings, insert spaces between strings
+    #expression is used to make mathematical formulas 
     )
 
 #Print the plot
@@ -92,20 +94,42 @@ EPAair$Date <- ymd(EPAair$Date)
 Say we want to plot the number of records each month in the Peter/Paul lakes dataset. How might we do that? What challenges do we face? 
 
 ```{r Plot the number of records by month}
-#What kind of values are months?
+#What kind of values are months? 
+class(PeterPaul.chem.nutrients$month)
 
 #List unique values
+unique(PeterPaul.chem.nutrients$month)
 
 #Plot how many Lake observations occur each month
+ggplot(PeterPaul.chem.nutrients,
+       aes(x=month))+
+  geom_histogram(bins=12)
 
 #Convert month to a factor -- with 12 levels, labelled with month names
-
+factor(PeterPaul.chem.nutrients$month)
 #Try again: Plot how many Lake observations occur each month
-
+ggplot(PeterPaul.chem.nutrients,
+       aes(x=factor(month)))+
+  geom_bar()
 #Alter to include missing months
+factor(PeterPaul.chem.nutrients$month, 
+       levels = 1:12)
 
 #Tidy up the code
-
+the_plot <- PeterPaul.chem.nutrients %>%
+  ggplot(
+       aes(x=factor(
+         month, 
+         levels = 1:12, 
+         labels = month.abb)))+
+  geom_bar() +
+  scale_x_discrete(
+    drop=FALSE)+
+  labs(
+    title= "My Plot",
+    x = "Month"
+  )
+the_plot + theme_light()
 ```
 
 
@@ -225,9 +249,28 @@ Exercise: build your own scatterplots of PeterPaul.chem.nutrients
 ```{r, fig.height = 3, fig.width = 4, warning = FALSE}
 
 # 1. 
-# Plot surface temperatures by day of  year. 
+# Plot surface temperatures by day of year. 
 # Color your points by year, and facet by lake in two rows.
 # Change the ylab name
+
+surface_temp_PeterPaul_plot <- PeterPaul.chem.nutrients %>% 
+  filter(depth == 0) %>% 
+  ggplot(
+    mapping = aes(
+      x=daynum,
+      y=temperature_C,
+      color=year4)
+    ) + 
+  geom_point(size=0.5, aplha=0.5)+ #alpha sets transparency 0 to 1
+  facet_wrap(vars(lakename))+
+  labs(
+    title ="Surface Temperature vs Day of Year by Year",
+    y= "Surface Temperature (C)",
+    x= "Day Number"
+  )
+  
+surface_temp_PeterPaul_plot
+
 
 
 #2. 
@@ -236,8 +279,7 @@ Exercise: build your own scatterplots of PeterPaul.chem.nutrients
 # Change the color palette to magma and play with direction (+- 1), which one makes more sense?
 # Change x axis to include marker/labels every 5 years
 
-
-
+#answers on slides 
 ```
 ## Plotting the relationship between two continuous variables: Scatterplot
 
