@@ -39,6 +39,7 @@ knitr::opts_chunk$set(tidy.opts=list(width.cutoff=50), tidy=TRUE)
 ```{r setting up,  message = FALSE}
 #Load necessary packages
 library(tidyverse);library(lubridate);library(here);library(cowplot)
+library(viridis);library(RColorBrewer);library(colormap)
 #Check working directory
 getwd() 
 #Upload data sets
@@ -75,6 +76,43 @@ Litter$collectDate <- ymd(Litter$collectDate)
 
 ```{r build plot theme}
 #3
+my_theme <- theme_base() + 
+  theme(
+    plot.background = element_rect(
+      linewidth = 1
+    ),
+    plot.title = element_text(
+      size = rel(1.25),
+      face = "bold"
+    ),
+    panel.background = element_rect(
+      fill = NA
+    ),
+    panel.grid = element_line(
+      color = "gray80",
+      linewidth = 0.25
+    ),
+    axis.title = element_text(
+      size = rel(0.9),
+      face = "bold"
+    ),
+    axis.line = element_line(
+      linewidth = 0.7
+    ),
+    legend.title = element_text(
+      size = rel(0.9),
+      face = "bold"
+    ),
+    legend.text = element_text(
+      size = rel(0.9),
+    ),
+    legend.background = element_rect(
+      fill = "gray95"
+    ),
+    legend.position = 'right',
+    complete = TRUE
+  )
+
 
 ```
 
@@ -85,6 +123,31 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 
 ```{r plot total P vs PO4}
 #4 
+totalP_plot <- NTL.LTER %>% 
+  ggplot(
+    mapping = aes(
+      x=po4,
+      y=tp_ug,
+      color=lakename)
+    ) + 
+  geom_point(size=1, alpha=0.8)+
+  xlim(0,50)+
+  scale_color_viridis(
+    discrete = TRUE, 
+    end = 0.8) +
+  geom_smooth(
+    method = "lm",
+    color = "black"
+  )+
+    #facet_wrap(vars(lakename))+
+  labs(
+    x = "Phosphate" ,
+    y = "Total Phosphorus (ug)",
+    title = "Total Phosphorus in Peter and Paul Lakes",
+    #legend
+  )+
+  my_theme
+totalP_plot
 
 ```
 
@@ -95,7 +158,72 @@ Tip: R has a build in variable called `month.abb` that returns a list of months;
 
 ```{r Create boxplots}
 #5 
+#temperature plot
+temp_plot <- NTL.LTER %>% 
+  ggplot(
+    mapping = aes(
+      x=factor(
+         month, 
+         levels = 1:12, 
+         labels = month.abb),
+      y=temperature_C,
+      color = lakename)
+    ) +
+  geom_boxplot()+
+    labs(
+    x = "Month" ,
+    y = "Temperature (C)",
+    title = "Temperature per month in Peter and Paul Lakes",
+    #legend
+  )+
+  my_theme
+temp_plot
 
+#TP plot
+TP_plot <- NTL.LTER %>% 
+  ggplot(
+    mapping = aes(
+      x=factor(
+         month, 
+         levels = 1:12, 
+         labels = month.abb),
+      y=tp_ug,
+      color = lakename)
+    ) +
+  geom_boxplot()+
+    labs(
+    x = "Month" ,
+    y = "Total Phosphorus (ug)",
+    title = "Total Phosphorus (ug) per month in Peter and Paul Lakes",
+    #legend
+  )+
+  my_theme
+TP_plot
+
+#TN plot
+TN_plot <- NTL.LTER %>% 
+  ggplot(
+    mapping = aes(
+      x=factor(
+         month, 
+         levels = 1:12, 
+         labels = month.abb),
+      y=tn_ug,
+      color = lakename)
+    ) +
+  geom_boxplot()+
+    labs(
+    x = "Month" ,
+    y = "Total Nitrogren (ug)",
+    title = "Total Nitrogren (ug) per month in Peter and Paul Lakes",
+    #legend
+  )+
+  my_theme
+TN_plot
+
+#create cowplot to combine the three plots
+temp_TP_TN_plot <- plot_grid(temp_plot, TP_plot, TN_plot, nrow = 2, align = 'h', rel_heights = c(1.25, 1))
+temp_TP_TN_plot
 ```
 
 Question: What do you observe about the variables of interest over seasons and between lakes? 
