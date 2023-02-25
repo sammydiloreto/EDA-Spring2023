@@ -36,7 +36,10 @@ knitr::opts_chunk$set(tidy.opts=list(width.cutoff=50), tidy=TRUE)
 
 1. Set up your session. Load the tidyverse, lubridate, here & cowplot packages, and verify your home directory. Upload the NTL-LTER processed data files for nutrients and chemistry/physics for Peter and Paul Lakes (use the tidy `NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv` version) and the processed data file for the Niwot Ridge litter dataset (use the `NEON_NIWO_Litter_mass_trap_Processed.csv` version). 
 
-```{r setting up,  message = FALSE}
+2. Make sure R is reading dates as date format; if not change the format to date.
+
+```{r initialize project}
+#1 setting up
 #Load necessary packages
 library(tidyverse);library(lubridate);library(here);library(cowplot)
 library(viridis);library(RColorBrewer);library(colormap)
@@ -53,15 +56,9 @@ Litter <- read.csv(
        "NEON_NIWO_Litter_mass_trap_Processed.csv"), 
        stringsAsFactors = T)
 
-```
-
-2. Make sure R is reading dates as date format; if not change the format to date.
-
-```{r initialize project}
-#1 
+#2 Change date columns to date format
 class(NTL.LTER$sampledate)
 NTL.LTER$sampledate <- ymd(NTL.LTER$sampledate)
-#2 
 class(Litter$collectDate)
 Litter$collectDate <- ymd(Litter$collectDate)
 ```
@@ -82,7 +79,7 @@ my_theme <- theme_base() +
       linewidth = 1
     ),
     plot.title = element_text(
-      size = rel(1.25),
+      size = rel(1),
       face = "bold"
     ),
     panel.background = element_rect(
@@ -93,18 +90,22 @@ my_theme <- theme_base() +
       linewidth = 0.25
     ),
     axis.title = element_text(
-      size = rel(0.9),
+      size = rel(0.7),
+      face = "bold"
+    ),
+    axis.text = element_text(
+        size = rel(0.5),
       face = "bold"
     ),
     axis.line = element_line(
       linewidth = 0.7
     ),
     legend.title = element_text(
-      size = rel(0.9),
+      size = rel(0.7),
       face = "bold"
     ),
     legend.text = element_text(
-      size = rel(0.9),
+      size = rel(0.6),
     ),
     legend.background = element_rect(
       fill = "gray95"
@@ -144,7 +145,7 @@ totalP_plot <- NTL.LTER %>%
     x = "Phosphate" ,
     y = "Total Phosphorus (ug)",
     title = "Total Phosphorus in Peter and Paul Lakes",
-    #legend
+    color = "Lake Name"
   )+
   my_theme
 totalP_plot
@@ -170,11 +171,14 @@ temp_plot <- NTL.LTER %>%
       color = lakename)
     ) +
   geom_boxplot()+
-    labs(
+  scale_color_viridis(
+    discrete = TRUE, 
+    end = 0.6) +
+  labs(
     x = "Month" ,
     y = "Temperature (C)",
     title = "Temperature per month in Peter and Paul Lakes",
-    #legend
+    color = "Lake Name"
   )+
   my_theme
 temp_plot
@@ -191,11 +195,14 @@ TP_plot <- NTL.LTER %>%
       color = lakename)
     ) +
   geom_boxplot()+
-    labs(
+  scale_color_viridis(
+    discrete = TRUE, 
+    end = 0.6) +
+  labs(
     x = "Month" ,
     y = "Total Phosphorus (ug)",
     title = "Total Phosphorus (ug) per month in Peter and Paul Lakes",
-    #legend
+    color = "Lake Name"
   )+
   my_theme
 TP_plot
@@ -212,23 +219,28 @@ TN_plot <- NTL.LTER %>%
       color = lakename)
     ) +
   geom_boxplot()+
-    labs(
+  scale_color_viridis(
+    discrete = TRUE, 
+    end = 0.6) +
+  labs(
     x = "Month" ,
     y = "Total Nitrogren (ug)",
     title = "Total Nitrogren (ug) per month in Peter and Paul Lakes",
-    #legend
+    color = "Lake Name"
   )+
   my_theme
 TN_plot
 
 #create cowplot to combine the three plots
-temp_TP_TN_plot <- plot_grid(temp_plot, TP_plot, TN_plot, nrow = 2, align = 'h', rel_heights = c(1.25, 1))
-temp_TP_TN_plot
+temp_TP_TN_plot <- plot_grid(
+  temp_plot, TP_plot, TN_plot, 
+  nrow = 3) 
+temp_TP_TN_plot #only want one legend !!!!!!!!!!!!!!!!!!!!
 ```
 
 Question: What do you observe about the variables of interest over seasons and between lakes? 
 
-> Answer: 
+> Answer: Temperature for both lakes in higher in July and August and lower in the surrounding months, with the lowest in November. This makes sense in terms of seasonal air temperatures. Between lakes there is not much differences in temperatures except in October, Peter Lake appears to have a much a higher median. Most other months Paul Lake has a slightly higher median than Peter Lake, with a larger difference in August. For both total phosphorus and total nitrogen, there are many outliers in each month for both lakes. Peter Lake always has higher medians than Paul Lake for both phosphorus and nitrogen. The warmer months have higher total phosphorus. The same trend appears for nitrogen but the variation between months is not as large. 
 
 6. [Niwot Ridge] Plot a subset of the litter dataset by displaying only the "Needles" functional group. Plot the dry mass of needle litter by date and separate by NLCD class with a color aesthetic. (no need to adjust the name of each land use)
 
@@ -236,12 +248,52 @@ Question: What do you observe about the variables of interest over seasons and b
 
 ```{r Plot litter}
 #6
-
-
+Needles_plot <- Litter %>% # doesnt look right
+  filter(functionalGroup %in% c("Needles")) %>%
+  ggplot(
+    mapping = aes(
+      x=factor(collectDate),
+      y=dryMass,
+      color= nlcdClass)
+    ) +
+  geom_boxplot()+
+  scale_color_viridis(
+    discrete = TRUE, 
+    end = 0.6) +
+  labs(
+    x = "Collection Date" ,
+    y = "Needles Dry Mass",
+    title = "Dry Mass of Needles over time for each Landcover Class",
+    color = "Landcover"
+  )+
+  my_theme +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5)) 
+Needles_plot
+  
 #7
-
-
+Needles_plot2 <- Litter %>% # doesnt look right
+  filter(functionalGroup %in% c("Needles")) %>%
+  ggplot(
+    mapping = aes(
+      x=factor(collectDate),
+      y=dryMass,
+      color = nlcdClass)
+    ) +
+  geom_boxplot()+
+  facet_wrap(vars(nlcdClass))+
+  scale_color_viridis(
+    discrete = TRUE, 
+    end = 0.6) +
+  labs(
+    x = "Collection Date" ,
+    y = "Needles Dry Mass",
+    title = "Dry Mass of Needles over time for each Landcover Class",
+    color = "Landcover"
+  )+
+  my_theme #+
+  #theme(axis.text.x = element_text(angle = 45, vjust = 0.5)) 
+Needles_plot2
 ```
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
 
-> Answer:
+> Answer: Plot 7 is more effective because when separated out by landcover type, you can see the needles dry mass over time better. You can still broadly compare between landcover types. 
