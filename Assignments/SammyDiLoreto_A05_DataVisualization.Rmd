@@ -31,36 +31,40 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Vi
 #For it to work, the "formatR" package needs to be installed
 
 #install.packages('formatR')
-knitr::opts_chunk$set(tidy.opts=list(width.cutoff=50), tidy=TRUE)
+#library(formatR)
+#knitr::opts_chunk$set(tidy.opts=list(width.cutoff=50), tidy=TRUE)
 ```
 
 1. Set up your session. Load the tidyverse, lubridate, here & cowplot packages, and verify your home directory. Upload the NTL-LTER processed data files for nutrients and chemistry/physics for Peter and Paul Lakes (use the tidy `NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv` version) and the processed data file for the Niwot Ridge litter dataset (use the `NEON_NIWO_Litter_mass_trap_Processed.csv` version). 
 
 2. Make sure R is reading dates as date format; if not change the format to date.
 
-```{r initialize project}
+```{r initialize project, message = FALSE, warning = FALSE}
 #1 setting up
 #Load necessary packages
 library(tidyverse);library(lubridate);library(here);library(cowplot)
-library(viridis);library(RColorBrewer);library(colormap)
+library(viridis);library(RColorBrewer);library(colormap);library(ggthemes)
 #Check working directory
 getwd() 
 #Upload data sets
 processed_data = "Data/Processed_KEY"
 NTL.LTER <- read.csv(
   here(processed_data,
-       "NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv"), 
-       stringsAsFactors = T)
+       "NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv"),
+  stringsAsFactors = T)
 Litter <- read.csv(
   here(processed_data,
-       "NEON_NIWO_Litter_mass_trap_Processed.csv"), 
-       stringsAsFactors = T)
+       "NEON_NIWO_Litter_mass_trap_Processed.csv"),
+  stringsAsFactors = T)
 
 #2 Change date columns to date format
 class(NTL.LTER$sampledate)
 NTL.LTER$sampledate <- ymd(NTL.LTER$sampledate)
+class(NTL.LTER$sampledate)
+
 class(Litter$collectDate)
 Litter$collectDate <- ymd(Litter$collectDate)
+class(Litter$collectDate)
 ```
 
 ## Define your theme
@@ -71,46 +75,46 @@ Litter$collectDate <- ymd(Litter$collectDate)
  * Axis ticks/gridlines
  * Legend
 
-```{r build plot theme}
+```{r build plot theme, message = FALSE, warning = FALSE}
 #3
 my_theme <- theme_base() + 
   theme(
     plot.background = element_rect(
       linewidth = 1
-    ),
+      ),
     plot.title = element_text(
       size = rel(1),
       face = "bold"
-    ),
+      ),
     panel.background = element_rect(
       fill = NA
-    ),
+      ),
     panel.grid = element_line(
       color = "gray80",
       linewidth = 0.25
-    ),
+      ),
     axis.title = element_text(
       size = rel(0.7),
       face = "bold"
-    ),
+      ),
     axis.text = element_text(
         size = rel(0.5),
       face = "bold"
-    ),
+      ),
     axis.line = element_line(
       linewidth = 0.7
-    ),
+      ),
     legend.title = element_text(
       size = rel(0.7),
       face = "bold"
-    ),
+      ),
     legend.text = element_text(
-      size = rel(0.6),
-    ),
+      size = rel(0.6)
+      ),
     legend.background = element_rect(
       fill = "gray95"
-    ),
-    legend.position = 'right',
+        ),
+    legend.position = 'bottom',
     complete = TRUE
   )
 
@@ -122,7 +126,7 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 
 4. [NTL-LTER] Plot total phosphorus (`tp_ug`) by phosphate (`po4`), with separate aesthetics for Peter and Paul lakes. Add a line of best fit and color it black. Adjust your axes to hide extreme values (hint: change the limits using `xlim()` and/or `ylim()`).
 
-```{r plot total P vs PO4}
+```{r plot total P vs PO4, message = FALSE, warning = FALSE}
 #4 
 totalP_plot <- NTL.LTER %>% 
   ggplot(
@@ -133,20 +137,17 @@ totalP_plot <- NTL.LTER %>%
     ) + 
   geom_point(size=1, alpha=0.8)+
   xlim(0,50)+
-  scale_color_viridis(
-    discrete = TRUE, 
-    end = 0.8) +
   geom_smooth(
     method = "lm",
-    color = "black"
-  )+
-    #facet_wrap(vars(lakename))+
+    color = "black")+
+  scale_color_viridis(
+    discrete = TRUE, 
+    end = 0.6)+
   labs(
     x = "Phosphate" ,
     y = "Total Phosphorus (ug)",
     title = "Total Phosphorus in Peter and Paul Lakes",
-    color = "Lake Name"
-  )+
+    color = "Lake Name")+
   my_theme
 totalP_plot
 
@@ -157,7 +158,7 @@ totalP_plot
 
 Tip: R has a build in variable called `month.abb` that returns a list of months;see <https://r-lang.com/month-abb-in-r-with-example>
 
-```{r Create boxplots}
+```{r Create boxplots, message = FALSE, warning = FALSE}
 #5 
 #temperature plot
 temp_plot <- NTL.LTER %>% 
@@ -231,24 +232,40 @@ TN_plot <- NTL.LTER %>%
   my_theme
 TN_plot
 
-#create cowplot to combine the three plots
-temp_TP_TN_plot <- plot_grid(
-  temp_plot, TP_plot, TN_plot, 
+#combine the three plots, removing the legends
+combined_plots <- plot_grid(
+  temp_plot + theme(legend.position="none"), 
+  TP_plot + theme(legend.position="none"), 
+  TN_plot + theme(legend.position="none"), 
   nrow = 3) 
-temp_TP_TN_plot #only want one legend !!!!!!!!!!!!!!!!!!!!
+#get the legend
+legend<- get_legend(
+  temp_plot + 
+    guides(color = guide_legend(nrow = 1)) +
+    theme(legend.position = "bottom")
+)
+# add the legend underneath the row we made earlier. Give it 10%
+# of the height of one plot (via rel_heights).
+temp_TP_TN_plot <- plot_grid(
+  combined_plots, 
+  legend, 
+  ncol = 1, 
+  rel_heights = c(1, .1))
+temp_TP_TN_plot
+
 ```
 
 Question: What do you observe about the variables of interest over seasons and between lakes? 
 
-> Answer: Temperature for both lakes in higher in July and August and lower in the surrounding months, with the lowest in November. This makes sense in terms of seasonal air temperatures. Between lakes there is not much differences in temperatures except in October, Peter Lake appears to have a much a higher median. Most other months Paul Lake has a slightly higher median than Peter Lake, with a larger difference in August. For both total phosphorus and total nitrogen, there are many outliers in each month for both lakes. Peter Lake always has higher medians than Paul Lake for both phosphorus and nitrogen. The warmer months have higher total phosphorus. The same trend appears for nitrogen but the variation between months is not as large. 
+> Answer: Temperature medians for both lakes are higher in July, August, and September and lower in the surrounding months, with the lowest in November. This makes sense in terms of seasonal air temperatures. Between lakes there is not much differences in temperatures medians except in October, Peter Lake appears to have a much a higher median. Most other months, Paul Lake has a slightly higher median than Peter Lake, with a somewhat larger difference in August. For both total phosphorus and total nitrogen, there are many outliers in each month for both lakes. Peter Lake always has higher medians than Paul Lake for both phosphorus and nitrogen. The warmer months have higher total phosphorus. The same trend appears for nitrogen but the variation between months is not as large. 
 
 6. [Niwot Ridge] Plot a subset of the litter dataset by displaying only the "Needles" functional group. Plot the dry mass of needle litter by date and separate by NLCD class with a color aesthetic. (no need to adjust the name of each land use)
 
 7. [Niwot Ridge] Now, plot the same plot but with NLCD classes separated into three facets rather than separated by color. 
 
-```{r Plot litter}
+```{r Plot litter, message = FALSE, warning = FALSE}
 #6
-Needles_plot <- Litter %>% # doesnt look right
+Needles_plot <- Litter %>% 
   filter(functionalGroup %in% c("Needles")) %>%
   ggplot(
     mapping = aes(
@@ -262,16 +279,16 @@ Needles_plot <- Litter %>% # doesnt look right
     end = 0.6) +
   labs(
     x = "Collection Date" ,
-    y = "Needles Dry Mass",
+    y = "Needles Dry Mass", #UNITS???
     title = "Dry Mass of Needles over time for each Landcover Class",
     color = "Landcover"
   )+
   my_theme +
-  theme(axis.text.x = element_text(angle = 45, vjust = 0.5)) 
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.75, hjust = 0.8)) 
 Needles_plot
   
 #7
-Needles_plot2 <- Litter %>% # doesnt look right
+Needles_plot2 <- Litter %>% 
   filter(functionalGroup %in% c("Needles")) %>%
   ggplot(
     mapping = aes(
@@ -290,10 +307,10 @@ Needles_plot2 <- Litter %>% # doesnt look right
     title = "Dry Mass of Needles over time for each Landcover Class",
     color = "Landcover"
   )+
-  my_theme #+
-  #theme(axis.text.x = element_text(angle = 45, vjust = 0.5)) 
+  my_theme +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.75, hjust = 0.75)) 
 Needles_plot2
 ```
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
 
-> Answer: Plot 7 is more effective because when separated out by landcover type, you can see the needles dry mass over time better. You can still broadly compare between landcover types. 
+> Answer: Both plots show dry mass of needles over time for each land cover type, evergreen forest, grassland herbaceous, and shrub scrub. Plot 6 shows each boxplots for the different landcover types at each collection date whereas plot 7 splits up the graphs into three facets for each land cover type. Plot 7 is more effective because when separated out by landcover type, you can make better comparisons for needle dry mass over time. You can also still compare needle dry mass over time between landcover types. For example, in plot 7 you can more easily see that for both evergreen and grasslands, needle dry mass has decreased over time and for shrub scrub, dry mass has gone up and down. You can also see that evergreen and grasslands have higher medians for a few collection dates than most of shrub scrub. That information is very difficult to see on plot 6. One thing plot 6 does show well is which colection dates had the highest medians and largest range of dry mass, this can be seen on plot 7 but because the dates are more squished on the x-axis, it is not as easy to detect.
