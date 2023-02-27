@@ -163,15 +163,17 @@ Tip: R has a build in variable called `month.abb` that returns a list of months;
 #temperature plot
 temp_plot <- NTL.LTER %>% 
   ggplot(
-    mapping = aes(
-      x=factor(
-         month, 
-         levels = 1:12, 
-         labels = month.abb),
+       mapping = aes(
+         x=factor(
+           month, 
+           levels = 1:12, 
+           labels = month.abb),
       y=temperature_C,
       color = lakename)
     ) +
   geom_boxplot()+
+  scale_x_discrete(
+    drop=FALSE)+
   scale_color_viridis(
     discrete = TRUE, 
     end = 0.6) +
@@ -196,6 +198,8 @@ TP_plot <- NTL.LTER %>%
       color = lakename)
     ) +
   geom_boxplot()+
+  scale_x_discrete(
+    drop=FALSE)+
   scale_color_viridis(
     discrete = TRUE, 
     end = 0.6) +
@@ -220,6 +224,8 @@ TN_plot <- NTL.LTER %>%
       color = lakename)
     ) +
   geom_boxplot()+
+  scale_x_discrete(
+    drop=FALSE)+
   scale_color_viridis(
     discrete = TRUE, 
     end = 0.6) +
@@ -279,7 +285,7 @@ Needles_plot <- Litter %>%
     end = 0.6) +
   labs(
     x = "Collection Date" ,
-    y = "Needles Dry Mass", #UNITS???
+    y = "Needles Dry Mass", 
     title = "Dry Mass of Needles over time for each Landcover Class",
     color = "Landcover"
   )+
