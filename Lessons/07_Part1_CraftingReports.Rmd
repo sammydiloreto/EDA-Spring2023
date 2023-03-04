@@ -68,15 +68,31 @@ See: <https://rmarkdown.rstudio.com> and class recording.
 Create a table below that details the example datasets we have been using in class. The first column should contain the names of the datasets and the second column should include some relevant information about the datasets. (Hint: use the cheat sheets to figure out how to make a table in Rmd)
 
 
+
 ## R CHUNK EDITING CHALLENGE
 
 ### Installing packages
 
 Create an R chunk below that installs the package `knitr`. Instead of commenting out the code, customize the chunk options such that the code is not evaluated (i.e., not run).
 
+```{r install packages, eval = FALSE}
+install.packages('knitr')
+```
+
 ### Setup
 
 Create an R chunk below called "setup" that loads the packages `tidyverse`, `lubridate`, `here`, and `knitr`, and sets a ggplot theme. Remember that you need to disable R throwing a message, which contains a check mark that cannot be knitted.
+
+
+```{r setup, message = FALSE,	warning = FALSE}
+#Load packages
+library(tidyverse)
+library(lubridate)
+library(here)
+library(knitr)
+
+```
+
 
 
 In a new code chunk named "load data", load the NTL-LTER_Lake_Nutrients_Raw dataset, convert dates, display the head of the dataset, and set the date column to a date format.Customize the chunk options such that the code is run but is not displayed in the knitted document. The output, however, should be displayed.

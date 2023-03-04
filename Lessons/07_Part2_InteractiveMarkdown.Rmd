@@ -37,32 +37,41 @@ theme_set(my_theme)
 ### Create a base plot
 We will plot Total P as a function of time, coloring data by depth, and symbolizing by lake
 ```{r Create base plot, echo=FALSE, eval=FALSE}
-#Construct the plot
-nutrient_data %>% 
-  filter(year4 > 1990 & year4 < 2005) %>% 
-  ggplot(
-    aes(
-      x = sampledate, 
-      y = tp_ug, 
-      fill = depth_id, 
-      shape = lakename)) +
-  geom_point(alpha = 0.8, size = 2) +
-  scale_x_date(
-    date_breaks = "1 years",
-    date_labels = '%Y') +
-  scale_shape_manual(values = c(21, 24)) +
-  labs(
-    title = "Concentration over time, by depth and lake",
-    x = "Date", 
-    y = expression(Concentration ~ (mu*g / L)), 
-    shape = "Lake", 
-    fill = "Depth ID") +
-  scale_fill_viridis_c(
-    option = "mako", 
-    begin = 0, 
-    end = 1, 
-    guide = guide_colorbar(reverse = T),
-    direction = -1)
+#create variables
+#the_parameter = 'tp_ug'
+#start_year = '1990'
+#end_year = '2005'
+
+#creat plotting function
+plot_it <- function(the_parameter, start_year, end_year){
+  #Construct the plot
+  nutrient_data %>% 
+    filter(year4 > start_year & year4 < end_year) %>% 
+    ggplot(
+      aes(
+        x = sampledate, 
+        y = !!sym(the_parameter), 
+        fill = depth_id, 
+        shape = lakename)) +
+    geom_point(alpha = 0.8, size = 2) +
+    scale_x_date(
+      date_breaks = "1 years",
+      date_labels = '%Y') +
+    scale_shape_manual(values = c(21, 24)) +
+    labs(
+      title = "Concentration over time, by depth and lake",
+      x = "Date", 
+      y = expression(Concentration ~ (mu*g / L)), 
+      shape = "Lake", 
+      fill = "Depth ID") +
+    scale_fill_viridis_c(
+      option = "mako", 
+      begin = 0, 
+      end = 1, 
+      guide = guide_colorbar(reverse = T),
+      direction = -1)
+  return(my_plot)
+}
 ```
 
 ## Using variables in plots
@@ -86,7 +95,14 @@ Notice that when you do so, the Knit menu is replaced.
 Then we can add the code chunk listed in the document.Before running this code, however, we should set the code chunk options for the previous code chunks so that they are not run (eval) and not shown (echo). 
 
 ```{r, echo=FALSE}
-
+numericInput(
+  inputId = "n",
+  label = "How many cars?",
+  value = 5
+  )
+renderTable((
+  head(cars, input$n)
+))
 ```
 
 Shiny has many other input widgets: https://shiny.rstudio.com/gallery/widget-gallery.html. Below we'll use a Select Box widget to specifiy the variable shown in our plot. We'll also add a slider range to limit the date shown in our plot. 
@@ -94,7 +110,22 @@ Shiny has many other input widgets: https://shiny.rstudio.com/gallery/widget-gal
 Note: Before running this plot, set the previous code chunk to not evaluate
 
 ```{r widget exploration, echo=FALSE}
-
+selectInput(
+  inputId = "the_parameter",
+  label = "Select the parameter to plot",
+  choices = c('tp_ug', 'tn_ug'),
+  selected = 'tp_ug')
+sliderInput(
+  inputId = "YearSlider",
+  label = "Select the date range",
+  min = 1990,
+  max = 2020,
+  value = c(1995,2000)
+)
+renderPlot(
+  plot_it(input$the_parameter, 
+          input$YearSlider[1],
+          input$YearSlider[2]))
 ```
 
 
