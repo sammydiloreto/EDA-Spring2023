@@ -117,7 +117,7 @@ my_theme <- theme_base() +
     legend.position = 'bottom',
     complete = TRUE
   )
-
+theme_set(mytheme)
 
 ```
 
