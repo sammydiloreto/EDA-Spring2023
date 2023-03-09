@@ -107,7 +107,7 @@ boxplot.2018 <- epa_data %>%
   scale_x_discrete(
     drop=FALSE)+
   labs(x = "Month" ,
-    y = "Ozone (ug/m^3)")
+    y = expression(paste("Ozone", " (", mu, "g/m"^{3},")"))) #use expression paste, look in visual lab
 print(boxplot.2018)
 
 ```
@@ -129,7 +129,6 @@ boxplot.2019 <- epa_data %>%
 print(boxplot.2019)
 
 ```
-
 
 
 \newpage
