@@ -27,7 +27,7 @@ toc: TRUE
 
 ## Task 1 - Basic Markdown
 
-Create a table below summarizing the metadata of the EPA Air Quality data. The first column will be the metadata attribute item name: "Source", "Date", and "Filename". And the second column will include the metadata values: "EPA Air Quality SYstem (AQS)", "2018-2019", and "EPAair_O3_PM25_NC1819_Processed.csv". The first column should be aligned to the right and the second to the left.
+Create a table below summarizing the metadata of the EPA Air Quality data. The first column will be the metadata attribute item name: "Source", "Date", and "Filename". And the second column will include the metadata values: "EPA Air Quality System (AQS)", "2018-2019", and "EPAair_O3_PM25_NC1819_Processed.csv". The first column should be aligned to the right and the second to the left.
 
 | Metadata | Value |
 | -------- | ----- |
