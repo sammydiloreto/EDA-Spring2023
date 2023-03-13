@@ -29,11 +29,12 @@ toc: TRUE
 
 Create a table below summarizing the metadata of the EPA Air Quality data. The first column will be the metadata attribute item name: "Source", "Date", and "Filename". And the second column will include the metadata values: "EPA Air Quality System (AQS)", "2018-2019", and "EPAair_O3_PM25_NC1819_Processed.csv". The first column should be aligned to the right and the second to the left.
 
-| Metadata | Value |
-| -------- | ----- |
-| Source | EPA Air Quality System (AQS) |
-| Date | 2018-2019 |
+|     Metadata | Value |
+| -----------: | :---- |
+|   Source | EPA Air Quality System (AQS) |
+|     Date | 2018-2019 |
 | Filename | EPAair_O3_PM25_NC1819_Processed.csv | 
+
 
 ---
 
@@ -94,7 +95,7 @@ kable(summary_Ozone, col.names = c("County", "$\\mu g/m^3$"), caption = "Mean Oz
 
 Create two separate code chunks that create boxplots of the distribution of Ozone levels by month using, one for only records collected in 2018 and one for records in 2019. Customize the chunk options such that the final figures are displayed but not the code used to generate the figures. In addition, the plots aligned on the left side of the page and set the figure heights so both plots fit on the same page with minimal space remaining. Lastly, add a `fig.cap` chunk option to add a caption (title) to your plot that will display underneath the figure.
 
-```{r 2018 boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.align= "left", fig.height= 3, fig.cap="Ozone Levels by Month in 2018"}
+```{r 2018 boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.align= "left", fig.height= 3.1, fig.cap="Ozone Levels by Month in 2018"}
 boxplot.2018 <- epa_data %>% 
   filter(Year == 2018) %>% 
   select(Month, Ozone) %>%
@@ -107,12 +108,12 @@ boxplot.2018 <- epa_data %>%
   scale_x_discrete(
     drop=FALSE)+
   labs(x = "Month" ,
-    y = expression(paste("Ozone", " (", mu, "g/m"^{3},")"))) #use expression paste, look in visual lab
+    y = expression(paste("Ozone", " (", mu, "g/m"^{3},")"))) 
 print(boxplot.2018)
 
 ```
 
-```{r 2019 boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.align= "left", fig.height= 3, fig.cap="Ozone Levels by Month in 2019"}
+```{r 2019 boxplot, echo=FALSE, message=FALSE, warning=FALSE, fig.align= "left", fig.height= 3.1, fig.cap="Ozone Levels by Month in 2019"}
 boxplot.2019 <- epa_data %>% 
   filter(Year == 2019) %>% 
   select(Month, Ozone) %>%
@@ -125,7 +126,7 @@ boxplot.2019 <- epa_data %>%
   scale_x_discrete(
     drop=FALSE)+
   labs(x = "Month" ,
-    y = "Ozone (ug/m^3)")
+    y = expression(paste("Ozone", " (", mu, "g/m"^{3},")")))
 print(boxplot.2019)
 
 ```
@@ -138,5 +139,5 @@ Add a table of contents to your document and knit to a PDF. Submit your PDF to S
 
 ### Git Repository
 
-
+https://github.com/sammydiloreto/EDA-Spring2023.git 
 
