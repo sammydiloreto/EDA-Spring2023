@@ -280,11 +280,7 @@ the_df <- bind_rows(the_dfs)
 #Plot, because it's fun and rewarding
 ggplot(the_df,aes(x=Date,y=Avg_Withdrawals_mgd)) + 
   geom_line() + 
-  geom_smooth(method="loess",se=FALSE) +
-  labs(title = paste("2020 Water usage data for",the_registrant),
-       subtitle = the_facility_name,
-       y="Withdrawal (mgd)",
-       x="Date")
+  geom_smooth(method="loess",se=FALSE)
 ```
 
 # Part 3. Web Crawling
