@@ -1,11 +1,13 @@
 ---
-title: "Assignment 9: Spatial Analysis in R"
+title: 'Assignment 9: Spatial Analysis in R'
 author: "Sammy DiLoreto"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 geometry: margin=2.54cm
-editor_options: 
+editor_options:
   chunk_output_type: console
-  markdown: 
+  markdown:
     wrap: 72
 ---
 
@@ -182,7 +184,7 @@ Now we can examine where the flooding appears most acute by visualizing gage hei
 #Map the points, sized by gage height
 ggplot() +
   geom_sf(data= NE_counties_sf, fill = "gray") +
-  geom_sf(data = NWIS_gage_sf_join, aes(color= gage_ht_mean), alpha =0.8, size= 3)+
+  geom_sf(data = NWIS_gage_sf_join, aes(color= gage_ht_mean), size= 3)+
   scale_color_gradient(low="yellow",high="red")+
   labs(
     title= "NWIS Gage Locations in Nebraska",
@@ -240,10 +242,13 @@ douglas_gages <- NWIS_gage_sf_utm %>%
   st_filter(douglas_sf, .pred = st_intersects)
 
 #24 Plot
-ggplot()+
-  geom_sf(data = NE_counties_sf_utm, fill="lightgreen")+
-  geom_sf(data= douglas_sf, fill ="orange")+
-  geom_sf(data = douglas_gages, color="purple", size = 1)+
-  labs(title= "NWIS Gage Locations in Douglas County, Nebraska")
+
+mapview(NE_counties_sf_utm, col.regions = 'lightgreen', 
+        layer.name = "Nebraska Counties") + 
+  mapview(douglas_sf, col.regions= "orange",
+          layer.name = "Douglas County, NE")+
+  mapview(douglas_gages, col.regions= "purple", 
+          alpha.regions = 1,
+          layer.name= "Douglas County Gage Sites")
 
 ```
